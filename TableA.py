@@ -20,6 +20,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # -------------------- WebDriver Setup --------------------
+url = "https://grid-india.in/en/reports/daily-psp-report"
 def get_website_content(url):
     driver = None
     try:
