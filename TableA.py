@@ -20,20 +20,25 @@ from webdriver_manager.chrome import ChromeDriverManager
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # -------------------- WebDriver Setup --------------------
-def installff():
-  os.system('sbase install geckodriver')
-  os.system('ln -s /home/appuser/venv/lib/python3.7/site-packages/seleniumbase/drivers/geckodriver /home/appuser/venv/bin/geckodriver')
+def get_website_content(url):
+    driver = None
+    try:
+        # Using on Local
+        options = webdriver.ChromeOptions()
+        options.add_argument('--headless')
+        options.add_argument('--disable-gpu')
+        options.add_argument('--window-size=1920,1200')
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
+                                  options=options)
+        st.write(f"DEBUG:DRIVER:{driver}")
+    except Exception as e:
+        st.write(f"DEBUG:INIT_DRIVER:ERROR:{e}")
+    return None
 
-_ = installff()
-from selenium import webdriver
-from selenium.webdriver import FirefoxOptions
-opts = FirefoxOptions()
-opts.add_argument("--headless")
-browser = webdriver.Firefox(options=opts)
 
 # -------------------- Scraping Logic --------------------
 def select_filters(driver, wait, year, month):
-    browser.get("https://grid-india.in/en/reports/daily-psp-report")
+    driver.get("https://grid-india.in/en/reports/daily-psp-report")
     dropdown1 = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".period_drp .my-select__control")))
     dropdown1.click()
     wait.until(EC.element_to_be_clickable((By.XPATH, f"//div[contains(text(), '{year}')]"))).click()
