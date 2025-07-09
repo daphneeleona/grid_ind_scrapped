@@ -17,7 +17,6 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # -------------------- WebDriver Setup --------------------
 url = "https://grid-india.in/en/reports/daily-psp-report"
-
 def get_website_content(url):
     try:
         options = webdriver.ChromeOptions()
@@ -120,7 +119,8 @@ def main():
 
     if st.button("Extract Data"):
         with st.spinner("Scraping data... Please wait."):
-            driver = get_website_content("https://grid-india.in/en/reports/daily-psp-report")
+            url = "https://grid-india.in/en/reports/daily-psp-report"
+            driver = get_website_content(url)
             if not driver:
                 return
 
