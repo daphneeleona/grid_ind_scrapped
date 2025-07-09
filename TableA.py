@@ -123,7 +123,7 @@ def main():
 
     if st.button("Extract Data"):
         with st.spinner("Scraping data... Please wait."):
-            driver = get_driver()
+            driver = get_website_content()
             wait = WebDriverWait(driver, 30)
 
             select_filters(driver, wait, selected_year, selected_month)
@@ -150,6 +150,3 @@ def main():
                 )
             else:
                 st.error("No valid Excel data found.")
-
-if __name__ == "__main__":
-    main()
