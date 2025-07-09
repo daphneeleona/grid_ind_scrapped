@@ -9,6 +9,7 @@ import shutil
 import urllib3
 
 from selenium import webdriver
+from selenium.webdriver import FirefoxOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
@@ -19,55 +20,21 @@ from webdriver_manager.chrome import ChromeDriverManager
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # -------------------- WebDriver Setup --------------------
-@st.cache_resource
-def get_driver():
-    options = Options()
-    options.add_argument("--headless")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--window-size=1920,1080")
-    options.add_argument("--disable-software-rasterizer")
-    options.add_argument("--remote-debugging-port=9222")
-    options.add_argument("--disable-background-networking")
-    options.add_argument("--disable-default-apps")
-    options.add_argument("--disable-extensions")
-    options.add_argument("--disable-sync")
-    options.add_argument("--metrics-recording-only")
-    options.add_argument("--mute-audio")
+@st.experimental_singleton
+def installff():
+  os.system('sbase install geckodriver')
+  os.system('ln -s /home/appuser/venv/lib/python3.7/site-packages/seleniumbase/drivers/geckodriver /home/appuser/venv/bin/geckodriver')
 
-    # ✅ Set Chromium binary path
-    chromium_path = shutil.which("chromium") or shutil.which("google-chrome") or "/usr/bin/chromium"
-    options.binary_location = chromium_path
-
-    # ✅ Log Chromium version
-    try:
-        chromium_version = subprocess.run([chromium_path, "--version"], capture_output=True, text=True).stdout.strip()
-    except Exception as e:
-        = f"Error: {e}"
-
-    # ✅ Install matching ChromeDriver and log version
-    try:
-        chromedriver_path = ChromeDriverManager().install()
-        chromedriver_version = subprocess.run([chromedriver_path, "--version"], capture_output=True, text=True).stdout.strip()
-    except Exception as e:
-        chromedriver_version = f"Error: {e}"
-
-    # ✅ Display in Streamlit sidebar
-    with st.sidebar:
-        st.markdown("### 🧩 Version Info")
-        st.write(f"**Chromium:** {chromium_version}")
-        st.write(f"**ChromeDriver:** {chromedriver_version}")
-
-    driver = webdriver.Chrome(
-        service=Service(chromedriver_path),
-        options=options
-    )
-    return driver
+_ = installff()
+from selenium import webdriver
+from selenium.webdriver import FirefoxOptions
+opts = FirefoxOptions()
+opts.add_argument("--headless")
+browser = webdriver.Firefox(options=opts)
 
 # -------------------- Scraping Logic --------------------
 def select_filters(driver, wait, year, month):
-    driver.get("https://grid-india.in/en/reports/daily-psp-report")
+    browser.get("https://grid-india.in/en/reports/daily-psp-report")
     dropdown1 = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".period_drp .my-select__control")))
     dropdown1.click()
     wait.until(EC.element_to_be_clickable((By.XPATH, f"//div[contains(text(), '{year}')]"))).click()
