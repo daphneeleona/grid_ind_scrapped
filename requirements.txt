@@ -7,5 +7,3 @@ xlrd
 requests
 urllib3
 seleniumbase
-chromium
-chromium-chromedriver
