@@ -4,16 +4,12 @@ import requests
 import pandas as pd
 from io import BytesIO
 from datetime import datetime
-import subprocess
-import shutil
 import urllib3
 
 from selenium import webdriver
-from selenium.webdriver import FirefoxOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
@@ -21,25 +17,22 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # -------------------- WebDriver Setup --------------------
 url = "https://grid-india.in/en/reports/daily-psp-report"
+
 def get_website_content(url):
-    driver = None
     try:
-        # Using on Local
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')
         options.add_argument('--disable-gpu')
         options.add_argument('--window-size=1920,1200')
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
-                                  options=options)
-        st.write(f"DEBUG:DRIVER:{driver}")
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        driver.get(url)
+        return driver
     except Exception as e:
-        st.write(f"DEBUG:INIT_DRIVER:ERROR:{e}")
-    return None
-
+        st.error(f"Failed to initialize WebDriver: {e}")
+        return None
 
 # -------------------- Scraping Logic --------------------
 def select_filters(driver, wait, year, month):
-    driver.get("https://grid-india.in/en/reports/daily-psp-report")
     dropdown1 = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".period_drp .my-select__control")))
     dropdown1.click()
     wait.until(EC.element_to_be_clickable((By.XPATH, f"//div[contains(text(), '{year}')]"))).click()
@@ -49,7 +42,10 @@ def select_filters(driver, wait, year, month):
     wait.until(EC.element_to_be_clickable((By.XPATH, f"//div[contains(text(), '{month}')]"))).click()
 
     time.sleep(10)
-    Select(wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "select[aria-label='Choose a page size']")))).select_by_visible_text("100")
+    try:
+        Select(wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "select[aria-label='Choose a page size']")))).select_by_visible_text("100")
+    except:
+        pass
     time.sleep(10)
 
 def extract_links_from_table(driver, wait):
@@ -124,12 +120,16 @@ def main():
 
     if st.button("Extract Data"):
         with st.spinner("Scraping data... Please wait."):
-            driver = get_website_content()
-            wait = WebDriverWait(driver, 30)
+            driver = get_website_content("https://grid-india.in/en/reports/daily-psp-report")
+            if not driver:
+                return
 
-            select_filters(driver, wait, selected_year, selected_month)
-            excel_links = extract_links_from_table(driver, wait)
-            driver.quit()
+            try:
+                wait = WebDriverWait(driver, 30)
+                select_filters(driver, wait, selected_year, selected_month)
+                excel_links = extract_links_from_table(driver, wait)
+            finally:
+                driver.quit()
 
             if not excel_links:
                 st.error("No data extracted.")
@@ -151,3 +151,6 @@ def main():
                 )
             else:
                 st.error("No valid Excel data found.")
+
+if __name__ == "__main__":
+    main()
