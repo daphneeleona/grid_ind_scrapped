@@ -6,3 +6,4 @@ openpyxl
 xlrd
 requests
 urllib3
+seleniumbase
