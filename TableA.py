@@ -1,5 +1,3 @@
-
-pip install webdriver-manager
 import streamlit as st
 import time
 import requests
@@ -20,14 +18,6 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-# -------------------- Chromium Version Detection --------------------
-def get_chromium_version():
-    try:
-        result = subprocess.run(["/usr/bin/chromium", "--version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        return result.stdout.strip()
-    except Exception as e:
-        return f"Error detecting Chromium version: {e}"
-
 # -------------------- WebDriver Setup --------------------
 @st.cache_resource
 def get_driver():
@@ -46,11 +36,31 @@ def get_driver():
     options.add_argument("--metrics-recording-only")
     options.add_argument("--mute-audio")
 
+    # ✅ Set Chromium binary path
     chromium_path = shutil.which("chromium") or shutil.which("google-chrome") or "/usr/bin/chromium"
     options.binary_location = chromium_path
 
+    # ✅ Log Chromium version
+    try:
+        chromium_version = subprocess.run([chromium_path, "--version"], capture_output=True, text=True).stdout.strip()
+    except Exception as e:
+        = f"Error: {e}"
+
+    # ✅ Install matching ChromeDriver and log version
+    try:
+        chromedriver_path = ChromeDriverManager().install()
+        chromedriver_version = subprocess.run([chromedriver_path, "--version"], capture_output=True, text=True).stdout.strip()
+    except Exception as e:
+        chromedriver_version = f"Error: {e}"
+
+    # ✅ Display in Streamlit sidebar
+    with st.sidebar:
+        st.markdown("### 🧩 Version Info")
+        st.write(f"**Chromium:** {chromium_version}")
+        st.write(f"**ChromeDriver:** {chromedriver_version}")
+
     driver = webdriver.Chrome(
-        service=Service(ChromeDriverManager().install()),
+        service=Service(chromedriver_path),
         options=options
     )
     return driver
