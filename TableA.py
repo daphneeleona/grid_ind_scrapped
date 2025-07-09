@@ -1,3 +1,5 @@
+
+pip install webdriver-manager
 import streamlit as st
 import time
 import requests
