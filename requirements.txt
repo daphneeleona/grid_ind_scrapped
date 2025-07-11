@@ -1,6 +1,6 @@
-streamlit
-selenium
-webdriver-manager
+streamlit==1.35.0
+selenium==4.20.0
+webdriver-manager==4.0.1
 pandas
 openpyxl
 xlrd
