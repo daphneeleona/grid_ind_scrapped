@@ -1,4 +1,4 @@
-firefox-esr
+chromium
 wget
 unzip
 bash
