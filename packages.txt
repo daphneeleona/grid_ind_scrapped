@@ -1,2 +1,4 @@
 firefox-esr
-geckodriver
+wget
+unzip
+bash
