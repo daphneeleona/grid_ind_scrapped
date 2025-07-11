@@ -20,7 +20,7 @@ url = "https://grid-india.in/en/reports/daily-psp-report"
 def get_website_content(url):
     try:
         options = webdriver.ChromeOptions()
-#options.add_argument('--headless')
+        options.add_argument('--headless=new')
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-gpu')
         options.add_argument('--window-size=1920,1200')
