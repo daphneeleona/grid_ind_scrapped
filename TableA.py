@@ -32,7 +32,7 @@ def get_website_content(url):
         
         options.binary_location = "/usr/bin/chromium"
         service = Service("/usr/bin/chromedriver")
-        driver = webdriver.Chrome(service=service, options=options)
+        driver = webdriver.Chrome(service=service(ChromeDriverManager().install()), options=options)
         driver.get(url)
         return driver
     except Exception as e:
