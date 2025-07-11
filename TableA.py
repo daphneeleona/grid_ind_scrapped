@@ -27,8 +27,7 @@ def get_website_content(url):
         options.add_argument('--window-size=1920,1080')
         options.add_argument('--disable-dev-shm-usage')
         service = FirefoxService(executable_path="/usr/bin/geckodriver")
-        driver = webdriver.Firefox(service=service, options=options)
-
+        driver = webdriver.Firefox(service=service, options=options)
         driver.get(url)
         return driver
     except Exception as e:
