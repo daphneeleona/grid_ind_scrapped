@@ -11,8 +11,9 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.firefox.options import Options as FirefoxOptions
-from selenium.webdriver.firefox.service import Service as FirefoxService
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -20,14 +21,14 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 url = "https://grid-india.in/en/reports/daily-psp-report"
 def get_website_content(url):
     try:
-        options = FirefoxOptions()
+        options = ChromeOptions()
         options.add_argument('--headless=new')
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-gpu')
         options.add_argument('--window-size=1920,1080')
         options.add_argument('--disable-dev-shm-usage')
-        service = FirefoxService(executable_path="/usr/bin/geckodriver")
-        driver = webdriver.Firefox(service=service, options=options)
+        service = ChromeService(executable_path="/usr/bin/chromedriver")
+        driver = webdriver.Chrome(service=service, options=options)
         driver.get(url)
         return driver
     except Exception as e:
