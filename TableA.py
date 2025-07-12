@@ -31,7 +31,7 @@ def get_driver(url):
     driver = webdriver.Chrome(service=service, options=options)
     return webdriver.Chrome(service=service, options=options)
 def get_website_content(url):
-    driver = get_driver()
+    driver = get_driver(url)
     driver.get(url)
     time.sleep(3)
     
