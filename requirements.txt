@@ -1,8 +1,8 @@
 streamlit
-selenium
+selenium==4.11.2
+webdriver-manager
 pandas
 openpyxl
 xlrd
 requests
 urllib3
-seleniumbase
