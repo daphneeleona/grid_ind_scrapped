@@ -30,11 +30,12 @@ def get_driver():
     
     service = Service()
     driver = webdriver.Chrome(service=service, options=options)
-    return webdriver.Chrome(service=service, options=options)
+    return driver  # ✅ Return the initialized driver
 def get_website_content(url):
     driver = get_driver()
     driver.get(url)
     time.sleep(3)
+    return driver
     
 # -------------------- Scraping Logic --------------------
 def select_filters(driver, wait, year, month):
