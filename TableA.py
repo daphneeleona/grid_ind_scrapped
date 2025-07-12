@@ -5,14 +5,15 @@ import pandas as pd
 from io import BytesIO
 from datetime import datetime
 import urllib3
-
+import os
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.chrome.service import Service 
+from selenium.webdriver.chrome.options import Options 
+from os.path import exists
 
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
