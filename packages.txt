@@ -1,4 +1,1 @@
 chromium
-wget
-unzip
-bash
