@@ -19,22 +19,22 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # -------------------- WebDriver Setup --------------------
 url = "https://grid-india.in/en/reports/daily-psp-report"
+def get_driver(url):
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless=new')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-gpu')
+    options.add_argument('--window-size=1920,1080')
+    options.add_argument('--disable-dev-shm-usage')
+    
+    service = Service()
+    driver = webdriver.Chrome(service=service, options=options)
+    return webdriver.Chrome(service=service, options=options)
 def get_website_content(url):
-    try:
-        options = ChromeOptions()
-        options.add_argument('--headless=new')
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-gpu')
-        options.add_argument('--window-size=1920,1080')
-        options.add_argument('--disable-dev-shm-usage')
-        service = ChromeService(executable_path="/usr/bin/chromedriver")
-        driver = webdriver.Chrome(service=service, options=options)
-        driver.get(url)
-        return driver
-    except Exception as e:
-        st.error(f"Failed to initialize WebDriver: {e}")
-        return None
-
+    driver = get_driver()
+    driver.get(url)
+    time.sleep(3)
+    
 # -------------------- Scraping Logic --------------------
 def select_filters(driver, wait, year, month):
     dropdown1 = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".period_drp .my-select__control")))
