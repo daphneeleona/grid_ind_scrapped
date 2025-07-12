@@ -19,7 +19,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # -------------------- WebDriver Setup --------------------
 url = "https://grid-india.in/en/reports/daily-psp-report"
-def get_driver(url):
+def get_driver():
     options = webdriver.ChromeOptions()
     options.add_argument('--headless=new')
     options.add_argument('--no-sandbox')
@@ -31,7 +31,7 @@ def get_driver(url):
     driver = webdriver.Chrome(service=service, options=options)
     return webdriver.Chrome(service=service, options=options)
 def get_website_content(url):
-    driver = get_driver(url)
+    driver = get_driver()
     driver.get(url)
     time.sleep(3)
     
