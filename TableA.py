@@ -13,6 +13,8 @@ from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service 
 from selenium.webdriver.chrome.options import Options 
+from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.chrome import ChromeType
 from os.path import exists
 
 
@@ -33,7 +35,7 @@ def get_driver():
     return driver  # ✅ Return the initialized driver
 def get_website_content(url):
     driver = get_driver()
-    driver.get(url)
+    driver.get(url, verify = False)
     time.sleep(3)
     return driver
     
